@@ -1,0 +1,1 @@
+This Repo contains work done for my Mastes Final Project, this is aa RNA Seq analysis on data from liver tissues of NAFLD patients and controls (GSE260666), this study aims to investigate the expression of SCFA-related genes and their involvement in NAFLD-associated pathways using Gene Set Analysis in R (GSAR).
