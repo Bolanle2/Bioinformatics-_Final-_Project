@@ -71,7 +71,7 @@ rownames(metadata)<- metadata$SampleID # sets sample-id as row name for metadata
 metadata<- metadata[, -1, drop = FALSE]# Drop included so it maintains a data frame format 
 
 
-# removing space from meta data as it affects deseq and to aviod warnings 
+# removing space from metadata as it affects deseq and to avoid warnings 
 metadata$Condition[metadata$Condition== "Control_rep1 [21120D1]"]= "Control_rep1"
 metadata$Condition <- gsub(" \\[.*\\]", "", metadata$Condition)  #  regular expression (regex), which helps find and replace specific patterns in text.
 #" " (Space), [ is a special character in regex, so we escape it with \\. .* means "match everything after the [ until the next part of the pattern".
@@ -109,15 +109,6 @@ summary(result_NAHL)
 
 result_NAFL["6566",]
 
-#What Does This Mean?
-#Your new threshold (padj < 0.05) revealed 70 DEGs (37 up, 33 down).
-#This is still a small number of DEGs, which could mean:
-#The conditions you’re comparing have minimal transcriptional differences.
-
-#The dataset has high variability, reducing statistical power.
-
-#Some genes of interest might be just above the significance threshold
-
 # Compare NASH vs. Control
 results_NASH = results(dds, contrast = c("Condition", "NASH", "Control"), alpha = 0.05)
 summary(results_NASH)
@@ -142,7 +133,7 @@ res_annotated<- merge(res2_df, anno_unique,by= "ENTREZID")
 
 
 
-#-- Geting the over expressed gene 
+#-- Getting the overexpressed gene 
 sig_gene<- res_annotated %>% 
   dplyr::filter(padj<0.05& log2FoldChange>2) %>% 
   arrange(padj) %>% 
@@ -163,7 +154,7 @@ unde_gene<-res_annotated %>%
 
 
 
-#queris for scfa genes
+#queries for scfa genes
 
 #subset(res_annotated, grepl("^HDAC3$", SYMBOL))
 scfa_genes<- c("FFAR2", "FFAR3", "SLC16A1", "HDAC3","SLC16A3", "SLC5A8", "ABCG2",
@@ -296,7 +287,7 @@ top_pathway<- gseares_df%>%
   pull(ID)
 head(top_pathway)
 
-# make gseapot for each and rfeturn a list 
+# make gseapot for each and return a list 
 top_pathway_plots<- lapply(top_pathway, function(pathway){
   gseaplot(gseares, geneSetID = pathway, title = pathway)
 })
@@ -372,29 +363,6 @@ head(top_pathwayy)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 scfa_sets <- list(
   # Receptors (G-protein-coupled receptors)
   Receptors = c("FFAR2", "FFAR3", "HCAR2", "GPR109A", "GPR41", "GPR43"),
@@ -422,13 +390,6 @@ plotMA(reslfc_naflVScontrol,ylim=c(-2,2))
 
 
 
-
-
-
-
-
-
-
 # Visualization 
 ## 1 dispersion plot, as a genes read count increases  dispersion decreases.
 
@@ -439,7 +400,7 @@ plotDispEsts(dds)
 # explains variance transformation 
 
 
-# Variance Stablizing transformation
+# Variance Stabilizing transformation
 gene_symbols<- res_annotated$SYMBOL
 # Make a named vector mapping ENTREZID to SYMBOL
 
@@ -455,7 +416,7 @@ vsd <- vst(dds, blind= FALSE)
 sub_count<- assay(vsd)[rownames(vsd)%in% scfa_genes,]
 head(rownames(vsd))
 
-# heat map fi scfa gene expression accorss samples 
+# heat map for scfa gene expression across samples 
 pheatmap(sub_count,
          annotation_col = sample_annots,
          scale = "row",
@@ -466,7 +427,7 @@ pheatmap(sub_count,
          main = "SCFA Gene Expression Across Samples")
 
 
-#transformed valuses are used to generate pca  plot 
+#transformed values are used to generate a PCA  plot 
 
 plotPCA(vsd, intgroup= "Condition")
 
@@ -476,7 +437,7 @@ pca_data<- plotPCA(rld, intgroup= c("Condition")) #returnData= TRUE
 plot(pca_data$x[,3], pca_data$x[,4], col=Condition, pch=16)
 
 plotPCA(rld, intgroup= c("Condition"))
-#heatmaps .
+#heatmaps.
 
 ### Heat maps of sample to sample using a distance matrix with clustering ###
 
@@ -490,10 +451,10 @@ colnames(sampledist_matrix)
 color<- colorRampPalette(rev(brewer.pal(9, "Blues")))(255)
 
 
-# generting the heatmap of sample to sample 
+# generating the heatmap of sample to sample 
 pheatmap(sampledist_matrix, clustering_distance_rows = sampledist,
          clustering_distance_cols = sampledist, col = color)
-# notes lighter colors = less similar this is looking at the samples to see how samples are similar or dissimilar
+# notes lighter colors = less similar 
 
 # volcano plot  for degs
 EnhancedVolcano(res_annotated, 
